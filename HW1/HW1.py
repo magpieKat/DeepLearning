@@ -35,7 +35,7 @@ class OurModel(nn.Module):
         self.linear1 = nn.Linear(28*28, 64)
         self.linear2 = nn.Linear(64, 64)
         self.linear3 = nn.Linear(64, 128)
-        self.linear4 = nn.Linear(128, output_size)
+        self.linear4 = nn.Linear(128, 10)
         self.ReLU = nn.ReLU()
         self.LReLU = nn.LeakyReLU()
         self.Softmax = nn.LogSoftmax()
@@ -123,8 +123,10 @@ if __name__ == '__main__':
                                    transforms.ToTensor(),
                                    transforms.Normalize((0.1307,), (0.3081,))]))
 
+    type(test_dataset)
+    print(test_dataset)
+
     # Hyper parameters
-    output_size = 10
     num_epochs = 30
     batch_size = 50
     learning_rate = 0.05
@@ -139,6 +141,8 @@ if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                               batch_size=batch_size,
                                               shuffle=False)
+    type(test_loader)
+    print(test_loader)
 
     print('total training batch number: ', len(train_loader))
     print('total testing batch number: ', len(test_loader))
