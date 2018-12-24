@@ -7,14 +7,14 @@ Liron McLey 200307791
 Matan Hamra 300280310
 '''
 
-from datetime import date, datetime, time
+from datetime import date, datetime
 import torch
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime
+import datetime as time
 
 
 class Block(nn.Module):
