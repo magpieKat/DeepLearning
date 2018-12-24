@@ -203,8 +203,8 @@ def test(loader, dat_set, ep):
             outputs = model(images.to(device))
             loss += criterion(outputs, labels.to(device)).item()
             _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum()
+            total += labels.to(device).size(0)
+            correct += (predicted == labels.to(device)).sum()
 
         accuracy = 100.0 * (correct.item() / total)
         print('Epoch: %d, accuracy of the %s set is: %.4f' % (ep+1, dat_set, accuracy))
