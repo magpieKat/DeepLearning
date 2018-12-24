@@ -265,10 +265,14 @@ if __name__ == '__main__':
     # Data Loader (Input Pipeline)
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
                                                batch_size=batch_size,
+                                               pin_memory=(torch.cuda.is_available()),
+                                               num_workers=0,
                                                shuffle=True)
 
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                               batch_size=batch_size,
+                                              pin_memory=(torch.cuda.is_available()),
+                                              num_workers=0,
                                               shuffle=False)
 
     print('total training batch number: ', len(train_loader))
