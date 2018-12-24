@@ -131,6 +131,9 @@ if __name__ == '__main__':
     batch_size = 100
     learning_rate = 0.001
 
+    #  track time
+    tic = time.time()
+
     # Image Preprocessing
     transform_train = transforms.Compose([
         transforms.RandomHorizontalFlip(),
@@ -191,3 +194,8 @@ if __name__ == '__main__':
     moduleName = 'saveDir/' + date + 'Accu_' + Accu + '_model.pkl'
     torch.save(model.state_dict(), moduleName)
     print('END')
+
+    # track time
+    toc = time.time()
+    print('Elapsed: %s' % (toc - tic))
+
