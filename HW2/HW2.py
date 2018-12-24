@@ -7,7 +7,7 @@ Liron McLey 200307791
 Matan Hamra 300280310
 '''
 
-from datetime import date, datetime
+from datetime import date, datetime, time
 import torch
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
