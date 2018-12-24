@@ -175,8 +175,8 @@ def train():
         for batch_idx, (images, labels) in enumerate(train_loader):
 
             model.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
+            outputs = model(images.to(device))
+            loss = criterion(outputs, labels.to(device))
             loss.backward()
             optimizer.step()
             if (batch_idx + 1) % batch_size == 0:
@@ -200,8 +200,8 @@ def test(loader, dat_set, ep):
         total = 0
         for images, labels in loader:
 
-            outputs = model(images)
-            loss += criterion(outputs, labels).item()
+            outputs = model(images.to(device))
+            loss += criterion(outputs, labels.to(device)).item()
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum()
