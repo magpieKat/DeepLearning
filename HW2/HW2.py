@@ -47,7 +47,7 @@ class Model(nn.Module):
     def __init__(self, num_classes=10):
         super(Model, self).__init__()
         self.layers = self.makeLayers()
-        self.fc = nn.Linear(1, num_classes)
+        self.fc = nn.Linear(74052, num_classes)
         self.logsoftmax = nn.LogSoftmax(dim=1)
 
     def makeLayers(self):
