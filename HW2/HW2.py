@@ -14,7 +14,8 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime as time
+import datetime
+import time
 
 
 class Block(nn.Module):
