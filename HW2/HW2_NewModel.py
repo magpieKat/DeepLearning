@@ -306,4 +306,4 @@ if __name__ == '__main__':
     print('END')
     # End Timing
     toc = time.time()
-    print('Elapsed time is %s',tic-toc)
+    print('Elapsed time is:',toc-tic)
