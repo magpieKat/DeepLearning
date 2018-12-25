@@ -172,6 +172,7 @@ def train():
     test_error_vec = []
     for epoch in range(num_epochs):
         model.train()
+        scheduler.step()
         for batch_idx, (images, labels) in enumerate(train_loader):
 
             model.zero_grad()
