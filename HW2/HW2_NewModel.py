@@ -93,7 +93,7 @@ class DenseNet(nn.Module):
         small_inputs (bool) - set to True if images are 32x32. Otherwise assumes images are larger.
         efficient (bool) - set to True to use checkpointing. Much more memory efficient, but slower.
     """
-    def __init__(self, growth_rate=3, block_config=(16, 16, 16), compression=0.25,
+    def __init__(self, growth_rate=2, block_config=(25,25,25), compression=0.25,
                  num_init_features=24, bn_size=4, drop_rate=0,
                  num_classes=10, small_inputs=True, efficient=False):
 
@@ -226,14 +226,13 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
 
 
 
-
 if __name__ == '__main__':
     # Hyper Parameters
     plt.switch_backend('agg')
     num_epochs = 300
     batch_size = 64
     learning_rate = 0.1
-    device = torch.device('cuda')
+    device = torch.device('cpu')
     momentum = 0.9
     wd = 0.0001
     # Start timing
@@ -280,6 +279,8 @@ if __name__ == '__main__':
     print('total training batch number: ', len(train_loader))
     print('total testing batch number: ', len(test_loader))
 
+    date = datetime.datetime.now().strftime("%d-%m-%y %H-%M-%S")
+
     model = DenseNet().to(device)
 
     # Calculate the number of trainable parameters in the model
@@ -292,9 +293,9 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate,momentum=momentum, nesterov=True, weight_decay=wd)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[0.5 * num_epochs, 0.75 * num_epochs],gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[100, 175,250],gamma=0.1)
 
-    date = datetime.datetime.now().strftime("%d-%m-%y %H-%M-%S")
+
 
     # Train the model
     train_lv, train_ev, test_lv, test_ev = train()
