@@ -229,7 +229,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
 
 if __name__ == '__main__':
     # Hyper Parameters
-    num_epochs = 200
+    num_epochs = 1
     batch_size = 64
     learning_rate = 0.1
     device = torch.device('cuda')
