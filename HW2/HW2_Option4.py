@@ -242,7 +242,7 @@ if __name__ == '__main__':
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(),
+        transforms.RandomRotation(degrees=45),
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465),
                              (0.247, 0.2434, 0.2615)),
