@@ -218,7 +218,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.suptitle(st, fontsize=25)
     plt.plot(X, vec1, color='blue', linewidth=2.5, linestyle='-', label=title1)
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
-    plt.xticks(np.arange(1, num_epochs, step=1))
+    plt.xticks(np.arange(1, num_epochs, step=30))
     plt.legend(loc='upper right')
     plt.savefig('saveDir/'+date+st)
 
@@ -229,7 +229,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
 if __name__ == '__main__':
     # Hyper Parameters
     plt.switch_backend('agg')
-    num_epochs = 300
+    num_epochs = 1
     batch_size = 64
     learning_rate = 0.1
     device = torch.device('cpu')
