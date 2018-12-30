@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # load trained network
     model = hw2.DenseNet()
-    model.load_state_dict(torch.load('26-12-18 20-13-23Accu_0.9075_model.pkl'))
+    model.load_state_dict(torch.load('26-12-18 09-28-03Accu_0.9065_model.pkl'))
 
     # return average accuracy over test set
     num_batches = int(len(test_dataset) / batch_size)
