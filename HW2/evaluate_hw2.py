@@ -8,10 +8,10 @@ def test(loader):
         correct = 0
         total = 0
         for images, labels in loader:
-            outputs = model(images.to(device))
+            outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
-            correct += (predicted == labels.to(device)).sum()
+            correct += (predicted == labels).sum()
 
         accuracy = 100.0 * (correct.item() / total)
         return accuracy
