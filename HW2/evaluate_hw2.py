@@ -1,7 +1,7 @@
 import torch
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
-import HW2_Option3 as hw2
+import HW2_Option4 as hw2
 
 
 def test(loader):
