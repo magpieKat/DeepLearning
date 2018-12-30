@@ -304,7 +304,12 @@ if __name__ == '__main__':
 
     Accu = str(1.0 - round(test_ev[-1],4))
     moduleName = 'saveDir/'+date + 'Accu_' + Accu +'_model.pkl'
-    torch.save(model.state_dict(), moduleName)
+    state = {
+        'state_dict': model.state_dict(),
+        'optimizer': optimizer.state_dict()
+    }
+    
+    torch.save(state, moduleName)
     print('END')
     # End Timing
     toc = time.time()
