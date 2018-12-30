@@ -1,7 +1,7 @@
 import torch
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
-import HW2 as hw2
+import HW2_Option3 as hw2
 
 
 def test(loader):
@@ -19,7 +19,7 @@ def test(loader):
 
 
 if __name__ == '__main__':
-    # load MNIST test set
+    # load CIFAR10 test set
     # Hyper parameters
     batch_size = 64
     output_size = 10
@@ -42,7 +42,7 @@ if __name__ == '__main__':
                                               shuffle=False)
 
     # load trained network
-    model = hw2.OurModel()
+    model = hw2.DenseNet()
     model.load_state_dict(torch.load('26-12-18 20-13-23Accu_0.9075_model.pkl'))
 
     # return average accuracy over test set
