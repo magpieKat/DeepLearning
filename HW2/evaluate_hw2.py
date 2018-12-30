@@ -8,7 +8,6 @@ def test(loader):
         correct = 0
         total = 0
         for images, labels in loader:
-            images = images.reshape(-1, 28 * 28)
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
