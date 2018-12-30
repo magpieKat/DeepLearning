@@ -5,6 +5,7 @@ import HW2_Option4 as hw2
 
 
 def test(loader):
+        model.eval()
         correct = 0
         total = 0
         for images, labels in loader:
