@@ -3,6 +3,7 @@ import torch.nn as nn
 import numpy as np
 from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
+import matplotlib.pyplot as plt
 
 
 # RNN based language model
@@ -66,6 +67,7 @@ def validiate(epoch,states):
     # Fix Me!!!!!
     global best_val_loss, learning_rate
     model.eval()
+    val_loss = []
     with torch.no_grad():
         for i in range(0, valid_d.size(1) - seq_length, seq_length):
             inputs = valid_d[:, i:i + seq_length].to(device)
@@ -73,9 +75,10 @@ def validiate(epoch,states):
 
 
             outputs, states = model(inputs, states)
-            val_loss = criterion(outputs, targets.reshape(-1))
+            val_loss += criterion(outputs, targets.reshape(-1))
             print('| end of epoch {:3d} | valid loss {:5.2f} | '
                   'valid ppl {:8.2f}'.format(epoch, val_loss, np.exp(val_loss)))
+        val_loss = val_loss/(valid_d.size(1) // seq_length)
         if not best_val_loss or val_loss < best_val_loss:
             torch.save(model.state_dict(), 'model.pkl')
             best_val_loss = val_loss
@@ -84,11 +87,18 @@ def validiate(epoch,states):
             learning_rate /= 4.0
 
 
+def plot_graph(vec1, title1, vec2, title2, st, date):
+    X = np.linspace(1, num_epochs, num_epochs)
+    plt.figure()
+    plt.suptitle(st, fontsize=25)
+    plt.plot(X, vec1, color='blue', linewidth=2.5, linestyle='-', label=title1)
+    plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
+    plt.xticks(np.arange(1, num_epochs, step=1))
+    plt.legend(loc='upper right')
+    plt.savefig('saveDir/'+date+st)
 
 
-
-
-def test():
+def generate():
     # Test the model
     with torch.no_grad():
         with open('sample.txt', 'w') as f:
@@ -161,4 +171,5 @@ if __name__ == '__main__':
 
 
     test()  # test the model
+    # generate()        # generate
     print('*****END*****')
