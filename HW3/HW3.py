@@ -4,25 +4,6 @@ import numpy as np
 from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
 
-# Device configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-# Hyper-parameters
-embed_size = 128
-hidden_size = 212
-num_layers = 1
-num_epochs = 5
-num_samples = 5  # number of words to be sampled
-batch_size = 20
-seq_length = 30
-learning_rate = 0.002
-
-# Load "Penn Treebank" dataset
-corpus = Corpus()
-ids = corpus.get_data('data/train.txt', batch_size)
-vocab_size = len(corpus.dictionary)
-num_batches = ids.size(1) // seq_length
-
 
 # RNN based language model
 class RNNLM(nn.Module):
@@ -46,80 +27,138 @@ class RNNLM(nn.Module):
         out = self.linear(out)
         return out, (h, c)
 
-
-model = RNNLM(vocab_size, embed_size, hidden_size, num_layers).to(device)
-
-# Calculate the number of trainable parameters in the model
-model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-params = sum([np.prod(p.size()) for p in model_parameters])
-print('Number of trainable parameters: ', params)
-
-# Loss and optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-
 # Truncated backpropagation
 def detach(states):
     return [state.detach() for state in states]
 
 
-# Train the model
-for epoch in range(num_epochs):
-    # Set initial hidden and cell states
-    states = (torch.zeros(num_layers, batch_size, hidden_size).to(device),
-              torch.zeros(num_layers, batch_size, hidden_size).to(device))
+def train():
+    # Train the model
+    for epoch in range(num_epochs):
+        model.train()
+        # Set initial hidden and cell states
+        states = (torch.zeros(num_layers, batch_size, hidden_size).to(device),
+                  torch.zeros(num_layers, batch_size, hidden_size).to(device))
 
-    for i in range(0, ids.size(1) - seq_length, seq_length):
-        # Get mini-batch inputs and targets
-        inputs = ids[:, i:i + seq_length].to(device)
-        targets = ids[:, (i + 1):(i + 1) + seq_length].to(device)
+        for i in range(0, ids.size(1) - seq_length, seq_length):
+            # Get mini-batch inputs and targets
+            inputs = ids[:, i:i + seq_length].to(device)
+            targets = ids[:, (i + 1):(i + 1) + seq_length].to(device)
 
-        # Forward pass
-        states = detach(states)
-        outputs, states = model(inputs, states)
-        loss = criterion(outputs, targets.reshape(-1))
+            # Forward pass
+            states = detach(states)
+            outputs, states = model(inputs, states)
+            loss = criterion(outputs, targets.reshape(-1))
 
-        # Backward and optimize
-        model.zero_grad()
-        loss.backward()
-        clip_grad_norm_(model.parameters(), 0.5)
-        optimizer.step()
+            # Backward and optimize
+            model.zero_grad()
+            loss.backward()
+            clip_grad_norm_(model.parameters(), 0.5)
+            optimizer.step()
 
-        step = (i + 1) // seq_length
-        if step % 100 == 0:
-            print ('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
-                   .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
+            step = (i + 1) // seq_length
+            if step % 100 == 0:
+                print('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
+                      .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
+        validiate(epoch,states)
 
-# Test the model
-with torch.no_grad():
-    with open('sample.txt', 'w') as f:
-        # Set intial hidden ane cell states
-        state = (torch.zeros(num_layers, 1, hidden_size).to(device),
-                 torch.zeros(num_layers, 1, hidden_size).to(device))
+def validiate(epoch,states):
+    # Fix Me!!!!!
+    global best_val_loss, learning_rate
+    model.eval()
+    with torch.no_grad():
+        for i in range(0, valid_d.size(1) - seq_length, seq_length):
+            inputs = valid_d[:, i:i + seq_length].to(device)
+            targets = valid_d[:, (i + 1):(i + 1) + seq_length].to(device)
 
-        # Select one word id randomly
-        prob = torch.ones(vocab_size)
-        input = torch.multinomial(prob, num_samples=1).unsqueeze(1).to(device)
 
-        for i in range(num_samples):
-            # Forward propagate RNN
-            output, state = model(input, state)
+            outputs, states = model(inputs, states)
+            val_loss = criterion(outputs, targets.reshape(-1))
+            print('| end of epoch {:3d} | valid loss {:5.2f} | '
+                  'valid ppl {:8.2f}'.format(epoch, val_loss, np.exp(val_loss)))
+        if not best_val_loss or val_loss < best_val_loss:
+            torch.save(model.state_dict(), 'model.pkl')
+            best_val_loss = val_loss
+        else:
+            # Anneal the learning rate if no improvement has been seen in the validation dataset.
+            learning_rate /= 4.0
 
-            # Sample a word id
-            prob = output.exp()
-            word_id = torch.multinomial(prob, num_samples=1).item()
 
-            # Fill input with sampled word id for the next time step
-            input.fill_(word_id)
 
-            # File write
-            word = corpus.dictionary.idx2word[word_id]
-            word = '\n' if word == '<eos>' else word + ' '
-            f.write(word)
 
-            if (i + 1) % 100 == 0:
-                print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
 
-# Save the model checkpoints
-torch.save(model.state_dict(), 'model.ckpt')
+
+def test():
+    # Test the model
+    with torch.no_grad():
+        with open('sample.txt', 'w') as f:
+            # Set intial hidden ane cell states
+            state = (torch.zeros(num_layers, 1, hidden_size).to(device),
+                     torch.zeros(num_layers, 1, hidden_size).to(device))
+
+            # Select one word id randomly
+            prob = torch.ones(vocab_size)
+            input = torch.multinomial(prob, num_samples=1).unsqueeze(1).to(device)
+
+            for i in range(num_samples):
+                # Forward propagate RNN
+                output, state = model(input, state)
+
+                # Sample a word id
+                prob = output.exp()
+                word_id = torch.multinomial(prob, num_samples=1).item()
+
+                # Fill input with sampled word id for the next time step
+                input.fill_(word_id)
+
+                # File write
+                word = corpus.dictionary.idx2word[word_id]
+                word = '\n' if word == '<eos>' else word + ' '
+                f.write(word)
+
+                if (i + 1) % 100 == 0:
+                    print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
+
+
+if __name__ == '__main__':
+    # Device configuration
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # Hyper-parameters
+    embed_size = 128
+    hidden_size = 150
+    num_layers = 1
+    num_epochs = 5
+    num_samples = 5  # number of words to be sampled
+    batch_size = 20
+    seq_length = 30
+    learning_rate = 0.002
+
+    # Load "Penn Treebank" dataset
+    corpus = Corpus()
+    ids = corpus.get_data('data/train.txt', batch_size)  # divide to batch size
+    valid_d = corpus.get_data('data/valid.txt', batch_size)
+    test_d = corpus.get_data('data/test.txt', batch_size)
+    vocab_size = len(corpus.dictionary)
+    num_batches = ids.size(1) // seq_length
+    best_val_loss = None
+
+    model = RNNLM(vocab_size, embed_size, hidden_size, num_layers).to(device)
+
+    # Calculate the number of trainable parameters in the model
+    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+    params = sum([np.prod(p.size()) for p in model_parameters])
+    print('Number of trainable parameters: ', params)
+
+    # Loss and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+    # Save the model checkpoints
+
+    train()  # train the model
+    torch.save(model.state_dict(), 'model.ckpt')
+
+
+    test()  # test the model
+    print('*****END*****')

@@ -10,7 +10,7 @@ import model
 
 # Add ckp
 parser = argparse.ArgumentParser(description='PyTorch PennTreeBank RNN/LSTM Language Model')
-parser.add_argument('--data', type=str, default='/input', # /input
+parser.add_argument('--data', type=str, default='', # /input
                     help='location of the data corpus')
 parser.add_argument('--checkpoint', type=str, default='',
                     help='model checkpoint to use')
@@ -81,7 +81,7 @@ test_data = batchify(corpus.test, eval_batch_size)
 ###############################################################################
 
 ntokens = len(corpus.dictionary)
-model = modelg.RNNModel(ars.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.tied)
+model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.tied)
 
 # Load checkpoint
 if args.checkpoint != '':
@@ -107,8 +107,8 @@ if args.cuda:
 
 def repackage_hidden(h):
     """Wraps hidden states in new Variables, to detach them from their history."""
-    if type(h) == Variable:
-        return Variable(h.data)
+    if type(h) == tuple:
+        return tuple(h)
     else:
         return tuple(repackage_hidden(v) for v in h)
 
@@ -143,6 +143,7 @@ def train():
     ntokens = len(corpus.dictionary)
     hidden = model.init_hidden(args.batch_size)
     for batch, i in enumerate(range(0, train_data.size(0) - 1, args.bptt)):
+        print(type(hidden))
         data, targets = get_batch(train_data, i)
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
