@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="416a17f5-3abb-4cbf-91b3-ddaac1353c87" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/HW3Op2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HW3Op3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HW3.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW3Op2.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW3Op2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,12 +31,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="231" />
-          <entry key="py" value="858" />
+          <entry key="py" value="885" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1089" />
+          <entry key="Python" value="1116" />
         </counts>
       </usages-collector>
     </session>
@@ -93,8 +90,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HW3Op2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1">
-              <caret line="145" column="24" selection-start-line="145" selection-start-column="24" selection-end-line="145" selection-end-column="24" />
+            <state relative-caret-position="426">
+              <caret line="83" column="66" selection-start-line="83" selection-start-column="66" selection-end-line="83" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -170,8 +167,8 @@
         <option value="$PROJECT_DIR$/../../HW3/suggestedRef/main.py" />
         <option value="$PROJECT_DIR$/suggestedRef/main.py" />
         <option value="$PROJECT_DIR$/HW3.py" />
-        <option value="$PROJECT_DIR$/HW3Op2.py" />
         <option value="$PROJECT_DIR$/HW3Op3.py" />
+        <option value="$PROJECT_DIR$/HW3Op2.py" />
       </list>
     </option>
   </component>
@@ -211,6 +208,11 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/HW3.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\matanhamra\Desktop\Python\DL_technion\DeepLearning\HW3" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -441,8 +443,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HW3Op2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1">
-          <caret line="145" column="24" selection-start-line="145" selection-start-column="24" selection-end-line="145" selection-end-column="24" />
+        <state relative-caret-position="426">
+          <caret line="83" column="66" selection-start-line="83" selection-start-column="66" selection-end-line="83" selection-end-column="66" />
         </state>
       </provider>
     </entry>
