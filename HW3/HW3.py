@@ -76,7 +76,7 @@ def validiate(epoch, states):
 
             outputs, states = model(inputs, states)
             crt = criterion(outputs, targets.reshape(-1))
-            val_loss += crt[1]
+            val_loss += crt
             print('| end of epoch {:3d} | valid loss {:5.2f} | '
                   'valid ppl {:8.2f}'.format(epoch, val_loss, np.exp(val_loss)))
         val_loss = val_loss/(valid_d.size(1) // seq_length)

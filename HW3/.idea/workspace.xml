@@ -76,12 +76,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HW3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
+            <state relative-caret-position="245">
+              <caret line="78" column="27" selection-start-line="78" selection-start-column="27" selection-end-line="78" selection-end-column="27" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
                 <element signature="e#963#1006#0" />
-                <marker date="1547460207197" expanded="true" signature="2277:3661" ph="..." />
+                <marker date="1547460310410" expanded="true" signature="2277:3658" ph="..." />
               </folding>
             </state>
           </provider>
@@ -376,12 +376,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HW3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
+        <state relative-caret-position="245">
+          <caret line="78" column="27" selection-start-line="78" selection-start-column="27" selection-end-line="78" selection-end-column="27" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
             <element signature="e#963#1006#0" />
-            <marker date="1547460207197" expanded="true" signature="2277:3661" ph="..." />
+            <marker date="1547460310410" expanded="true" signature="2277:3658" ph="..." />
           </folding>
         </state>
       </provider>
