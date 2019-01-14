@@ -78,10 +78,10 @@ def validiate(epoch, states):
             crt = criterion(outputs, targets.reshape(-1))
             val_loss += crt
         val_loss = val_loss/(valid_d.size(1) // seq_length)
-        print('| end of epoch {:3d} | valid loss {:5.2f} | '
-              'valid ppl {:8.2f}'.format(epoch, val_loss, np.exp(val_loss)))
+        print('\n| end of epoch {:3d} | valid loss {:5.2f} | '
+              'valid ppl {:8.2f}\n'.format(epoch, val_loss, np.exp(val_loss)))
         if not best_val_loss or val_loss < best_val_loss:
-            torch.save(model.state_dict(), 'model.pkl')
+            torch.save(model.state_dict(), 'model %d.pkl' % epoch)
             best_val_loss = val_loss
         else:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
