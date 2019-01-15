@@ -12,6 +12,7 @@ class RNNLM(nn.Module):
         super(RNNLM, self).__init__()
         self.embed = nn.Embedding(vocab_size, embed_size)
         self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
+        self.dropout = nn.Dropout(p=0.33)
         self.linear = nn.Linear(hidden_size, vocab_size)
 
     def forward(self, x, h):
@@ -20,7 +21,7 @@ class RNNLM(nn.Module):
 
         # Forward propagate LSTM
         out, (h, c) = self.lstm(x, h)
-
+        out = self.dropout(out)
         # Reshape output to (batch_size*sequence_length, hidden_size)
         out = out.reshape(out.size(0) * out.size(1), out.size(2))
 
@@ -136,14 +137,14 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 128
-    hidden_size = 140
+    embed_size = 212
+    hidden_size = 212
     num_layers = 2
-    num_epochs = 5
+    num_epochs = 30
     num_samples = 5  # number of words to be sampled
-    batch_size = 20
-    seq_length = 30
-    learning_rate = 0.002
+    batch_size = 50
+    seq_length = 10
+    learning_rate = 0.0025
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
