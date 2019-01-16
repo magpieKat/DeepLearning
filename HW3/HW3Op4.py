@@ -63,7 +63,7 @@ def train():
                 print('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
                       .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
         validiate(epoch,states)
-
+        test(epoch,states)
 def validiate(epoch, states):
 
     global best_val_loss, learning_rate
@@ -80,9 +80,9 @@ def validiate(epoch, states):
             val_loss += crt
         val_loss = val_loss/(valid_d.size(1) // seq_length)
         print('\n| end of epoch {:3d} | valid loss {:5.2f} | '
-              'valid ppl {:8.2f}\n'.format(epoch, val_loss, np.exp(val_loss)))
+              'valid ppl {:8.2f}\n'.format(epoch+1, val_loss, np.exp(val_loss)))
         if not best_val_loss or val_loss < best_val_loss:
-            torch.save(model.state_dict(), 'model_Option3.pkl')
+            torch.save(model.state_dict(), 'model_Option4.pkl')
             best_val_loss = val_loss
         else:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
@@ -98,6 +98,21 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.xticks(np.arange(1, num_epochs, step=1))
     plt.legend(loc='upper right')
     plt.savefig('saveDir/'+date+st)
+
+def test(epoch, states):
+    model.eval()
+    test_loss = 0
+    with torch.no_grad():
+        for i in range(0, test_d.size(1) - seq_length, seq_length):
+            inputs = test_d[:, i:i + seq_length].to(device)
+            targets = test_d[:, (i + 1):(i + 1) + seq_length].to(device)
+
+            outputs, states = model(inputs, states)
+            crt = criterion(outputs, targets.reshape(-1))
+            test_loss += crt
+        test_loss =   test_loss / (test_d.size(1) // seq_length)
+        print('\n| end of epoch {:3d} | test loss {:5.2f} | '
+              'test ppl {:8.2f}\n'.format(epoch+1, test_loss, np.exp(test_loss)))
 
 
 def generate():
@@ -137,13 +152,13 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 112
-    hidden_size = 150
+    embed_size = 100
+    hidden_size = 161
     num_layers = 2
-    num_epochs = 30
+    num_epochs = 5
     num_samples = 5  # number of words to be sampled
     batch_size = 50
-    seq_length = 10
+    seq_length = 30
     learning_rate = 0.0025
 
     # Load "Penn Treebank" dataset
@@ -169,9 +184,9 @@ if __name__ == '__main__':
     # Save the model checkpoints
 
     train()  # train the model
-    torch.save(model.state_dict(), 'model.ckpt')
 
 
-    test()  # test the model
+
+    generate()  # test the model
     # generate()        # generate
     print('*****END*****')
