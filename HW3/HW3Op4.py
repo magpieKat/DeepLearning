@@ -37,6 +37,8 @@ def detach(states):
 
 def train():
     train_loss_vec = []
+    n_digits = 4
+    torch.round(arr * 10 ^ n_digits) / (10 ^ n_digits)
     train_error_vec = []
     test_loss_vec = []
     test_error_vec = []
@@ -56,7 +58,7 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
-            train_loss_vec.append(torch.round(loss, 4))
+            train_loss_vec.append(torch.round(loss * 10 ^ n_digits) / (10 ^ n_digits))
 
             # Backward and optimize
             model.zero_grad()
