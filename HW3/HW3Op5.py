@@ -179,9 +179,9 @@ if __name__ == '__main__':
 
     # Hyper-parameters
     embed_size = 212
-    hidden_size = 64
+    hidden_size = 66
     num_layers = 2
-    num_epochs = 30
+    num_epochs = 14
     num_samples = 5  # number of words to be sampled
     batch_size = 50
     seq_length = 30
