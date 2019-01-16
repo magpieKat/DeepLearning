@@ -37,7 +37,6 @@ def detach(states):
 
 def train():
     train_loss_vec = []
-    n_digits = 4
 
     # Train the model
     for epoch in range(num_epochs):
@@ -55,7 +54,7 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
-            train_loss_vec.append(torch.round(loss * 10 ^ n_digits) / (10 ^ n_digits))
+            train_loss_vec.append(loss)
 
             # Backward and optimize
             model.zero_grad()
