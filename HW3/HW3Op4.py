@@ -108,7 +108,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
     plt.legend(loc='upper right')
-    if os.path.isdir('saveDir')
+    if os.path.isdir('saveDir'):
         os.mkdir('saveDir')
     plt.savefig('saveDir/'+date+st)
 
