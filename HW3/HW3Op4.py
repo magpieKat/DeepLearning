@@ -4,6 +4,7 @@ import numpy as np
 from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
 import matplotlib.pyplot as plt
+import os
 
 
 # RNN based language model
@@ -107,6 +108,8 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
     plt.legend(loc='upper right')
+    if os.path.isdir('saveDir')
+        os.mkdir('saveDir')
     plt.savefig('saveDir/'+date+st)
 
 def test(epoch, states):
