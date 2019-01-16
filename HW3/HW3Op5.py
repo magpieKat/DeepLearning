@@ -178,10 +178,10 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 48
+    embed_size = 50
     hidden_size = 196
     num_layers = 2
-    num_epochs = 12
+    num_epochs = 5
     num_samples = 5  # number of words to be sampled
     batch_size = 50
     seq_length = 30
