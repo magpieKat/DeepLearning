@@ -56,7 +56,7 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
-            train_loss_vec.append(round(loss, 4))
+            train_loss_vec.append(torch.round(loss, 4))
 
             # Backward and optimize
             model.zero_grad()
