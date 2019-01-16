@@ -35,6 +35,10 @@ def detach(states):
 
 
 def train():
+    train_loss_vec = []
+    train_error_vec = []
+    test_loss_vec = []
+    test_error_vec = []
     # Train the model
     for epoch in range(num_epochs):
         model.train()
@@ -51,6 +55,7 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
+            train_loss_vec.append(round(loss, 4))
 
             # Backward and optimize
             model.zero_grad()
@@ -62,10 +67,15 @@ def train():
             if step % 100 == 0:
                 print('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
                       .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
-        validiate(epoch,states)
-        test(epoch,states)
-def validiate(epoch, states):
 
+        train_loss_val = train_loss_vec.sum() / (ids.size(1) // seq_length)      # mean train loss
+
+        validiate(epoch,states)
+        test_loss_val = test(epoch,states)
+    return train_loss_val, test_loss_val
+
+
+def validiate(epoch, states):
     global best_val_loss, learning_rate
     model.eval()
     val_loss = 0
@@ -110,9 +120,11 @@ def test(epoch, states):
             outputs, states = model(inputs, states)
             crt = criterion(outputs, targets.reshape(-1))
             test_loss += crt
-        test_loss =   test_loss / (test_d.size(1) // seq_length)
+        test_loss = test_loss / (test_d.size(1) // seq_length)
         print('\n| end of epoch {:3d} | test loss {:5.2f} | '
               'test ppl {:8.2f}\n'.format(epoch+1, test_loss, np.exp(test_loss)))
+
+    return test_loss
 
 
 def generate():
@@ -183,9 +195,11 @@ if __name__ == '__main__':
 
     # Save the model checkpoints
 
-    train()  # train the model
+    train_lv, test_lv = train()  # train the model
 
-
+    date = datetime.datetime.now().strftime("%d-%m-%y %H-%M-%S")
+    plot_graph(train_lv, 'Train', test_lv, 'Test', 'Loss', date)
+    plot_graph(np.exp(train_lv), 'Train', np.exp(test_lv), 'Test', 'Perplexity', date)
 
     generate()  # test the model
     # generate()        # generate
