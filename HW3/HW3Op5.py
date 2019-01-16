@@ -180,12 +180,12 @@ if __name__ == '__main__':
     # Hyper-parameters
     embed_size = 188
     hidden_size = 82
-    num_layers = 4
-    num_epochs = 6
+    num_layers = 2
+    num_epochs = 10
     num_samples = 5  # number of words to be sampled
     batch_size = 50
     seq_length = 30
-    learning_rate = 0.01
+    learning_rate = 0.001
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
