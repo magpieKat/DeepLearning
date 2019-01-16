@@ -38,10 +38,7 @@ def detach(states):
 def train():
     train_loss_vec = []
     n_digits = 4
-    torch.round(arr * 10 ^ n_digits) / (10 ^ n_digits)
-    train_error_vec = []
-    test_loss_vec = []
-    test_error_vec = []
+
     # Train the model
     for epoch in range(num_epochs):
         model.train()
