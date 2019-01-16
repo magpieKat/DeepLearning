@@ -24,7 +24,7 @@ class RNNLM(nn.Module):
         super(RNNLM, self).__init__()
         self.embed = nn.Embedding(vocab_size, embed_size)
         self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
-        self.dropout = nn.Dropout(p=0.25)
+        self.dropout = nn.Dropout(p=0.35)
         self.linear = nn.Linear(hidden_size, vocab_size)
 
     def forward(self, x, h):
@@ -178,14 +178,14 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 188
-    hidden_size = 82
+    embed_size = 212
+    hidden_size = 64
     num_layers = 2
-    num_epochs = 10
+    num_epochs = 30
     num_samples = 5  # number of words to be sampled
     batch_size = 50
     seq_length = 30
-    learning_rate = 0.001
+    learning_rate = 0.0025
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
@@ -205,7 +205,7 @@ if __name__ == '__main__':
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.RMSprop(model.parameters(), lr=learning_rate)
 
     # Save the model checkpoints
 
