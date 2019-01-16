@@ -178,14 +178,14 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 77
-    hidden_size = 202
+    embed_size = 48
+    hidden_size = 196
     num_layers = 2
     num_epochs = 12
     num_samples = 5  # number of words to be sampled
     batch_size = 50
     seq_length = 30
-    learning_rate = 0.0021
+    learning_rate = 0.003
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
