@@ -37,10 +37,13 @@ def detach(states):
 
 def train():
     train_loss_vec = []
-
+    test_loss_vec = []
     # Train the model
+
     for epoch in range(num_epochs):
         model.train()
+        train_loss_val = 0
+
         # Set initial hidden and cell states
         states = (torch.zeros(num_layers, batch_size, hidden_size).to(device),
                   torch.zeros(num_layers, batch_size, hidden_size).to(device))
@@ -54,7 +57,7 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
-            train_loss_vec.append(loss)
+            train_loss_val = train_loss_val + loss / (ids.size(1) // seq_length)
 
             # Backward and optimize
             model.zero_grad()
@@ -67,11 +70,11 @@ def train():
                 print('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
                       .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
 
-        train_loss_val = train_loss_vec.sum() / (ids.size(1) // seq_length)      # mean train loss
-
-        validiate(epoch,states)
-        test_loss_val = test(epoch,states)
-    return train_loss_val, test_loss_val
+        train_loss_vec.append(train_loss_val)
+        validiate(epoch, states)
+        test_loss_val = test(epoch, states)
+        test_loss_vec.append(test_loss_val)
+    return train_loss_vec, test_loss_vec
 
 
 def validiate(epoch, states):
@@ -82,7 +85,6 @@ def validiate(epoch, states):
         for i in range(0, valid_d.size(1) - seq_length, seq_length):
             inputs = valid_d[:, i:i + seq_length].to(device)
             targets = valid_d[:, (i + 1):(i + 1) + seq_length].to(device)
-
 
             outputs, states = model(inputs, states)
             crt = criterion(outputs, targets.reshape(-1))
