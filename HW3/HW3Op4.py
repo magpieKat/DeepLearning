@@ -8,6 +8,16 @@ import datetime
 import os
 
 
+def new_dir(path, name):  # create new sub folder named: path/name
+    newPath = path + '/' + name
+    try:
+        if not os.path.exists(newPath):
+            os.makedirs(newPath)
+    except OSError:
+        print('Error: Creating directory of ' + newPath)
+    return newPath
+
+
 # RNN based language model
 class RNNLM(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
@@ -109,9 +119,9 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
     plt.legend(loc='upper right')
-    if os.path.isdir('saveDir'):
-        os.mkdir('saveDir')
+    new_dir(os.getcwd(), 'saveDir')
     plt.savefig('saveDir/'+date+st)
+
 
 def test(epoch, states):
     model.eval()
