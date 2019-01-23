@@ -5,76 +5,77 @@
 #
 ###############################################################################
 
-import argparse
-
 import torch
 from torch.autograd import Variable
-
+import numpy as np
 import data
 
-parser = argparse.ArgumentParser(description='PyTorch PTB Language Model')
-
 # Model parameters.
-parser.add_argument('--data', type=str, default='/input',
-                    help='location of the data corpus')
-parser.add_argument('--checkpoint', type=str, default='/model/model.pt',
-                    help='model checkpoint to use')
-parser.add_argument('--outf', type=str, default='/output/generated.txt',
-                    help='output file for generated text')
-parser.add_argument('--words', type=int, default='1000',
-                    help='number of words to generate')
-parser.add_argument('--seed', type=int, default=1111,
-                    help='random seed')
-parser.add_argument('--cuda', action='store_true',
-                    help='use CUDA')
-parser.add_argument('--temperature', type=float, default=1.0,
-                    help='temperature - higher will increase diversity')
-parser.add_argument('--log-interval', type=int, default=100,
-                    help='reporting interval')
-args = parser.parse_args()
+checkpoint='./model.pkl'
+cuda=True
+datapath='./data'
+log_interval=100
+outf='generated.txt'
+seed=1111 #'Buy low, sell high is the'
+temperature=100
+words=30
 
 # Set the random seed manually for reproducibility.
-torch.manual_seed(args.seed)
+torch.manual_seed(seed)
 if torch.cuda.is_available():
-    if not args.cuda:
+    if not cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
     else:
-        torch.cuda.manual_seed(args.seed)
+        torch.cuda.manual_seed(seed)
 
-if args.temperature < 1e-3:
-    parser.error("--temperature has to be greater or equal 1e-3")
-
-# Load checkpoint
-if args.checkpoint != '':
-    if args.cuda:
-        model = torch.load(args.checkpoint)
-    else:
-        # Load GPU model on CPU
-        model = torch.load(args.checkpoint, map_location=lambda storage, loc: storage)
+with open(checkpoint, 'rb') as f:
+    model = torch.load(f)
 model.eval()
 
-if args.cuda:
+if cuda:
     model.cuda()
 else:
     model.cpu()
 
-corpus = data.Corpus(args.data)
+corpus = data.Corpus(datapath)
 ntokens = len(corpus.dictionary)
 hidden = model.init_hidden(1)
-input = Variable(torch.rand(1, 1).mul(ntokens).long(), volatile=True)
-if args.cuda:
+input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['buy']],]), volatile=True)
+if cuda:
     input.data = input.data.cuda()
-
-with open(args.outf, 'w') as outf:
-    for i in range(args.words):
+    
+with open(outf, 'w') as outf:
+    output, hidden = model(input, hidden)
+    input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['low']],]), volatile=True)
+    if cuda:
+        input.data = input.data.cuda()
+    output, hidden = model(input, hidden)
+    input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['sell']],]), volatile=True)
+    if cuda:
+        input.data = input.data.cuda()
+    output, hidden = model(input, hidden)
+    input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['high']],]), volatile=True)
+    if cuda:
+        input.data = input.data.cuda()
+    output, hidden = model(input, hidden)
+    input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['is']],]), volatile=True)
+    if cuda:
+        input.data = input.data.cuda()
+    output, hidden = model(input, hidden)
+    input = Variable(torch.LongTensor([[corpus.dictionary.word2idx['the']],]), volatile=True)
+    if cuda:
+        input.data = input.data.cuda()
+    output, hidden = model(input, hidden)
+    outf.write('Output for temperature - ' + np.str(temperature) + ' is:\n')
+    outf.write('Buy low, sell high is the... \n')
+    for i in range(words):
         output, hidden = model(input, hidden)
-        word_weights = output.squeeze().data.div(args.temperature).exp().cpu()
+        word_weights = output.squeeze().data.div(temperature).exp().cpu()
         word_idx = torch.multinomial(word_weights, 1)[0]
         input.data.fill_(word_idx)
         word = corpus.dictionary.idx2word[word_idx]
-        # word = '\n' if word == "<eos>" else word
 
         outf.write(word + ('\n' if i % 20 == 19 else ' '))
 
-        if i % args.log_interval == 0:
-            print('| Generated {}/{} words'.format(i, args.words))
+        if i % log_interval == 0:
+            print('| Generated {}/{} words'.format(i, words))

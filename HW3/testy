@@ -1,0 +1,4 @@
+import torch
+if torch.backends.cudnn.enabled
+    print('da')
+

@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 says mr. rey 
 we 
+=======
+an offer N mark <unk> 
+>>>>>>> 06a39151d38e6dcb772db0f5168be936f32ffe42

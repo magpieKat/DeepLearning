@@ -2,11 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="416a17f5-3abb-4cbf-91b3-ddaac1353c87" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/HW3Matan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Submission/Deep learning HW3.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Submission/~$ep learning HW3.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/generate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/testy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/HW3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HW3.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HW3Liron.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW3Liron.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW3Op4.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW3Op4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_Option4.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/model_Option4.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sample.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sample.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/suggestedRef/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/suggestedRef/data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/suggestedRef/generate.py" beforeDir="false" afterPath="$PROJECT_DIR$/suggestedRef/generate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/suggestedRef/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/suggestedRef/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/suggestedRef/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/suggestedRef/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,8 +64,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HW3Op4.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1785">
-              <caret line="112" selection-end-line="220" />
+            <state relative-caret-position="1428">
+              <caret line="90" selection-end-line="192" />
             </state>
           </provider>
         </entry>
@@ -70,8 +82,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HW3Liron.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="216" column="25" selection-start-line="216" selection-start-column="25" selection-end-line="216" selection-end-column="25" />
+            <state relative-caret-position="433">
+              <caret line="217" column="25" selection-start-line="217" selection-start-column="25" selection-end-line="217" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -79,8 +91,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HW3Matan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="25" column="57" lean-forward="true" selection-start-line="25" selection-start-column="57" selection-end-line="25" selection-end-column="57" />
+            <state relative-caret-position="136">
+              <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -125,7 +137,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="460" />
     <option name="y" value="-12" />
     <option name="width" value="960" />
@@ -159,7 +171,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/HW3Liron.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/HW3Matan.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -179,7 +191,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.HW3_Liron">
+  <component name="RunManager" selected="Python.HW3_matan">
     <configuration name="HW3Op5" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="HW3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -222,6 +234,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="HW3_matan" type="PythonConfigurationType" factoryName="Python">
+      <module name="HW3" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\matanhamra\AppData\Local\Continuum\anaconda3\envs\tensorflow\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HW3Matan.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="HW3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -247,6 +280,7 @@
       <item itemvalue="Python.HW3_Liron" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.HW3Op5" />
+      <item itemvalue="Python.HW3_matan" />
     </list>
     <recent_temporary>
       <list>
@@ -270,7 +304,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12802951" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -392,8 +425,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HW3Op4.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="112" selection-end-line="220" />
+        <state relative-caret-position="1428">
+          <caret line="90" selection-end-line="192" />
         </state>
       </provider>
     </entry>
@@ -406,15 +439,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HW3Liron.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="216" column="25" selection-start-line="216" selection-start-column="25" selection-end-line="216" selection-end-column="25" />
+        <state relative-caret-position="433">
+          <caret line="217" column="25" selection-start-line="217" selection-start-column="25" selection-end-line="217" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/HW3Matan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="25" column="57" lean-forward="true" selection-start-line="25" selection-start-column="57" selection-end-line="25" selection-end-column="57" />
+        <state relative-caret-position="136">
+          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
         </state>
       </provider>
     </entry>

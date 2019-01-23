@@ -4,18 +4,6 @@ import numpy as np
 from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
 import matplotlib.pyplot as plt
-import datetime
-import os
-
-
-def new_dir(path, name):  # create new sub folder named: path/name
-    newPath = path + '/' + name
-    try:
-        if not os.path.exists(newPath):
-            os.makedirs(newPath)
-    except OSError:
-        print('Error: Creating directory of ' + newPath)
-    return newPath
 
 
 # RNN based language model
@@ -47,14 +35,9 @@ def detach(states):
 
 
 def train():
-    train_loss_vec = []
-    test_loss_vec = []
     # Train the model
-
     for epoch in range(num_epochs):
         model.train()
-        train_loss_val = 0
-
         # Set initial hidden and cell states
         states = (torch.zeros(num_layers, batch_size, hidden_size).to(device),
                   torch.zeros(num_layers, batch_size, hidden_size).to(device))
@@ -68,27 +51,21 @@ def train():
             states = detach(states)
             outputs, states = model(inputs, states)
             loss = criterion(outputs, targets.reshape(-1))
-            train_loss_val = train_loss_val + loss / (ids.size(1) // seq_length)
 
             # Backward and optimize
             model.zero_grad()
             loss.backward()
-            clip_grad_norm_(model.parameters(), 0.5)
+            clip_grad_norm_(model.parameters(), 0.25)
             optimizer.step()
 
             step = (i + 1) // seq_length
             if step % 100 == 0:
                 print('Epoch [{}/{}], Step[{}/{}], Loss: {:.4f}, Perplexity: {:5.2f}'
                       .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
-
-        train_loss_vec.append(train_loss_val)
-        validiate(epoch, states)
-        test_loss_val = test(epoch, states)
-        test_loss_vec.append(test_loss_val)
-    return train_loss_vec, test_loss_vec
-
-
+        validiate(epoch,states)
+        test(epoch,states)
 def validiate(epoch, states):
+
     global best_val_loss, learning_rate
     model.eval()
     val_loss = 0
@@ -96,6 +73,7 @@ def validiate(epoch, states):
         for i in range(0, valid_d.size(1) - seq_length, seq_length):
             inputs = valid_d[:, i:i + seq_length].to(device)
             targets = valid_d[:, (i + 1):(i + 1) + seq_length].to(device)
+
 
             outputs, states = model(inputs, states)
             crt = criterion(outputs, targets.reshape(-1))
@@ -119,9 +97,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
     plt.legend(loc='upper right')
-    new_dir(os.getcwd(), 'saveDir')
     plt.savefig('saveDir/'+date+st)
-
 
 def test(epoch, states):
     model.eval()
@@ -134,11 +110,9 @@ def test(epoch, states):
             outputs, states = model(inputs, states)
             crt = criterion(outputs, targets.reshape(-1))
             test_loss += crt
-        test_loss = test_loss / (test_d.size(1) // seq_length)
+        test_loss =   test_loss / (test_d.size(1) // seq_length)
         print('\n| end of epoch {:3d} | test loss {:5.2f} | '
               'test ppl {:8.2f}\n'.format(epoch+1, test_loss, np.exp(test_loss)))
-
-    return test_loss
 
 
 def generate():
@@ -178,14 +152,14 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Hyper-parameters
-    embed_size = 151
-    hidden_size = 111
+    embed_size = 128
+    hidden_size = 128
     num_layers = 2
-    num_epochs = 5
-    num_samples = 5  # number of words to be sampled
+    num_epochs = 20
+    num_samples = 30 # number of words to be sampled
     batch_size = 50
     seq_length = 30
-    learning_rate = 0.0025
+    learning_rate = 0.02
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
@@ -202,18 +176,16 @@ if __name__ == '__main__':
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
     params = sum([np.prod(p.size()) for p in model_parameters])
     print('Number of trainable parameters: ', params)
-
+    print(vocab_size)
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     # Save the model checkpoints
 
-    train_lv, test_lv = train()  # train the model
+    train()  # train the model
 
-    date = datetime.datetime.now().strftime("%d-%m-%y %H-%M-%S")
-    plot_graph(train_lv, 'Train', test_lv, 'Test', 'Loss', date)
-    plot_graph(np.exp(train_lv), 'Train', np.exp(test_lv), 'Test', 'Perplexity', date)
+
 
     generate()  # test the model
     # generate()        # generate
