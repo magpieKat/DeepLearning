@@ -36,6 +36,7 @@ class RNNLM(nn.Module):
         if embed_size != hidden_size:
             raise ValueError('Error! embed_size must equal hidden_size!\n')
         self.linear.weight = self.embed.weight
+        self.init_weights()
 
     def forward(self, x, h):
         # Embed word ids to vectors
@@ -49,6 +50,12 @@ class RNNLM(nn.Module):
         # Decode hidden states of all time steps
         out = self.linear(out)
         return out, (h, c)
+
+    def init_weights(self):
+        initrange = 0.1
+        self.embed.weight.data.uniform_(-initrange, initrange)
+        self.linear.bias.data.fill_(0)
+        self.linear.weight.data.uniform_(-initrange, initrange)
 
 
 # Truncated backpropagation
@@ -207,7 +214,7 @@ if __name__ == '__main__':
     batch_size = 50
     seq_length = 30
     dropout = 0.35
-    learning_rate = 10
+    learning_rate = 0.5
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
