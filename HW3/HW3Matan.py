@@ -26,7 +26,7 @@ class RNNLM(nn.Module):
         super(RNNLM, self).__init__()
         self.hidden_size = hidden_size
         self.embed = nn.Embedding(vocab_size, embed_size)
-        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
+        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout, bidirectional=True)
         self.linear = nn.Linear(4*hidden_size, vocab_size)
 
         # Tying weights as was suggested in:
@@ -58,7 +58,6 @@ class RNNLM(nn.Module):
         std = 1.0 / math.sqrt(self.hidden_size)
         for w in self.parameters():
             w.data.uniform_(-std, std)
-
 
     def init_weights(self):
         initrange = 0.1
