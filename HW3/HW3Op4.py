@@ -159,7 +159,7 @@ if __name__ == '__main__':
     num_samples = 30 # number of words to be sampled
     batch_size = 50
     seq_length = 30
-    learning_rate = 0.0025
+    learning_rate = 0.02
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
