@@ -214,7 +214,7 @@ if __name__ == '__main__':
     batch_size = 50
     seq_length = 30
     dropout = 0.35
-    learning_rate = 0.5
+    learning_rate = 0.01
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
