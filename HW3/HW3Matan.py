@@ -5,6 +5,7 @@ from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
 import matplotlib.pyplot as plt
 import datetime
+import math
 import os
 
 
@@ -23,9 +24,10 @@ def new_dir(path, name):
 class RNNLM(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size, num_layers, dropout):
         super(RNNLM, self).__init__()
+        self.hidden_size = hidden_size
         self.embed = nn.Embedding(vocab_size, embed_size)
         self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
-        self.linear = nn.Linear(hidden_size, vocab_size)
+        self.linear = nn.Linear(4*hidden_size, vocab_size)
 
         # Tying weights as was suggested in:
         # "Using the Output Embedding to Improve Language Models" (Press & Wolf 2016)
@@ -36,7 +38,8 @@ class RNNLM(nn.Module):
         if embed_size != hidden_size:
             raise ValueError('Error! embed_size must equal hidden_size!\n')
         self.linear.weight = self.embed.weight
-        self.init_weights()
+        self.reset_parameters()
+        # self.init_weights()
 
     def forward(self, x, h):
         # Embed word ids to vectors
@@ -50,6 +53,12 @@ class RNNLM(nn.Module):
         # Decode hidden states of all time steps
         out = self.linear(out)
         return out, (h, c)
+
+    def reset_parameters(self):
+        std = 1.0 / math.sqrt(self.hidden_size)
+        for w in self.parameters():
+            w.data.uniform_(-std, std)
+
 
     def init_weights(self):
         initrange = 0.1
@@ -209,7 +218,7 @@ if __name__ == '__main__':
     embed_size = 220
     hidden_size = 220
     num_layers = 2
-    num_epochs = 40
+    num_epochs = 10
     num_samples = 5  # number of words to be sampled
     batch_size = 20
     seq_length = 30
