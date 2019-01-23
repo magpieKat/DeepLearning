@@ -99,7 +99,7 @@ def train():
                       .format(epoch + 1, num_epochs, step, num_batches, loss.item(), np.exp(loss.item())))
 
         train_loss_vec.append(train_loss_val)
-        # validiate(epoch, states)
+        validiate(epoch, states)
         test_loss_val = test(epoch, states)
         test_loss_vec.append(test_loss_val)
     return train_loss_vec, test_loss_vec
@@ -211,9 +211,9 @@ if __name__ == '__main__':
     num_layers = 2
     num_epochs = 40
     num_samples = 5  # number of words to be sampled
-    batch_size = 50
+    batch_size = 20
     seq_length = 30
-    dropout = 0.35
+    dropout = 0.5
     learning_rate = 0.01
 
     # Load "Penn Treebank" dataset
@@ -234,7 +234,7 @@ if __name__ == '__main__':
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.RMSprop(model.parameters(), lr=learning_rate)
 
     # Save the model checkpoints
 
