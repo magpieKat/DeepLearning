@@ -177,7 +177,7 @@ def generate():
 if __name__ == '__main__':
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    print(device, '\n')
     # Hyper-parameters
     embed_size = 30
     hidden_size = 212
