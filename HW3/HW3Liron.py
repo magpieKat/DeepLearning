@@ -19,27 +19,43 @@ def new_dir(path, name):
     return newPath
 
 
-# RNN based language model
+# RNN based language model, LSTM specifically
 class RNNLM(nn.Module):
-    def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
+    def __init__(self, vocab_size, embed_size, hidden_size, num_layers, dropout):
         super(RNNLM, self).__init__()
         self.embed = nn.Embedding(vocab_size, embed_size)
-        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
-        self.dropout = nn.Dropout(p=0.35)
+        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
         self.linear = nn.Linear(hidden_size, vocab_size)
+
+        # Tying weights as was suggested in:
+        # "Using the Output Embedding to Improve Language Models" (Press & Wolf 2016)
+        # https://arxiv.org/abs/1608.05859
+        # and
+        # "Tying Word Vectors and Word Classifiers: A Loss Framework for Language Modeling" (Inan et al. 2016)
+        # https://arxiv.org/abs/1611.01462
+        if embed_size != hidden_size:
+            raise ValueError('Error! embed_size must equal hidden_size!\n')
+        self.linear.weight = self.embed.weight
+        self.init_weights()
 
     def forward(self, x, h):
         # Embed word ids to vectors
         x = self.embed(x)
 
         # Forward propagate LSTM
-        out, (h, c) = self.lstm(self.dropout(x), h)
+        out, (h, c) = self.lstm(x, h)
         # Reshape output to (batch_size*sequence_length, hidden_size)
         out = out.reshape(out.size(0) * out.size(1), out.size(2))
 
         # Decode hidden states of all time steps
         out = self.linear(out)
         return out, (h, c)
+
+    def init_weights(self):
+        initrange = 0.1
+        self.embed.weight.data.uniform_(-initrange, initrange)
+        self.linear.bias.data.fill_(0)
+        self.linear.weight.data.uniform_(-initrange, initrange)
 
 
 # Truncated backpropagation
@@ -113,6 +129,7 @@ def validiate(epoch, states):
 
 
 def test(epoch, states):
+    global best_val_loss, learning_rate
     model.eval()
     test_loss = 0
     with torch.no_grad():
@@ -124,8 +141,18 @@ def test(epoch, states):
             crt = criterion(outputs, targets.reshape(-1))
             test_loss += crt
         test_loss = test_loss / (test_d.size(1) // seq_length)
+
+        # print results
         print('\n| end of epoch {:3d} | test loss {:5.2f} | '
               'test ppl {:8.2f}\n'.format(epoch+1, test_loss, np.exp(test_loss)))
+
+        # save model if loss is smaller, else make learning rate smaller
+        if not best_val_loss or test_loss < best_val_loss:
+            torch.save(model.state_dict(), 'model_Option4.pkl')
+            best_val_loss = test_loss
+        else:
+            # Anneal the learning rate if no improvement has been seen in the validation dataset.
+            learning_rate /= 4.0
 
     return test_loss
 
@@ -177,16 +204,17 @@ def generate():
 if __name__ == '__main__':
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    print(device, '\n')
     # Hyper-parameters
-    embed_size = 30
-    hidden_size = 212
+    embed_size = 220
+    hidden_size = 220
     num_layers = 2
-    num_epochs = 10
+    num_epochs = 40
     num_samples = 5  # number of words to be sampled
-    batch_size = 50
+    batch_size = 20
     seq_length = 30
-    learning_rate = 0.003
+    dropout = 0.3
+    learning_rate = 0.005
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
@@ -197,7 +225,7 @@ if __name__ == '__main__':
     num_batches = ids.size(1) // seq_length
     best_val_loss = None
 
-    model = RNNLM(vocab_size, embed_size, hidden_size, num_layers).to(device)
+    model = RNNLM(vocab_size, embed_size, hidden_size, num_layers, dropout).to(device)
 
     # Calculate the number of trainable parameters in the model
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
@@ -216,6 +244,5 @@ if __name__ == '__main__':
     plot_graph(train_lv, 'Train', test_lv, 'Test', 'Loss', date)
     plot_graph(np.exp(train_lv), 'Train', np.exp(test_lv), 'Test', 'Perplexity', date)
 
-    generate()  # test the model
-    # generate()        # generate
+    # generate()  # test the model
     print('*****END*****')
