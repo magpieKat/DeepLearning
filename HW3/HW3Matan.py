@@ -127,12 +127,12 @@ def validiate(epoch, states):
         val_loss = val_loss/(valid_d.size(1) // seq_length)
         print('\n| end of epoch {:3d} | valid loss {:5.2f} | '
               'valid ppl {:8.2f}\n'.format(epoch+1, val_loss, np.exp(val_loss)))
-        if not best_val_loss or val_loss < best_val_loss:
-            torch.save(model.state_dict(), 'model_Option4.pkl')
-            best_val_loss = val_loss
-        else:
-            # Anneal the learning rate if no improvement has been seen in the validation dataset.
-            learning_rate /= 4.0
+        # if not best_val_loss or val_loss < best_val_loss:
+        #     torch.save(model.state_dict(), 'model_Option4.pkl')
+        #     best_val_loss = val_loss
+        # else:
+        #     # Anneal the learning rate if no improvement has been seen in the validation dataset.
+        #     learning_rate /= 4.0
 
 
 def test(epoch, states):
