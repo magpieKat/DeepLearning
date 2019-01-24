@@ -213,13 +213,10 @@ if __name__ == '__main__':
     num_samples = 5  # number of words to be sampled
     batch_size = 20
     seq_length = 30
-<<<<<<< HEAD
     dropout = 0.3
     learning_rate = 0.005
-=======
     dropout = 0.5
     learning_rate = 0.01
->>>>>>> 06a39151d38e6dcb772db0f5168be936f32ffe42
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()

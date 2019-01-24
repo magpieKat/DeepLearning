@@ -187,7 +187,7 @@ def generate():
             # Set initial hidden and cell states
             state = (torch.zeros(num_layers, 1, hidden_size).to(device),
                      torch.zeros(num_layers, 1, hidden_size).to(device))
-            outf.write('Output for temperature - ' + np.str(temperature) + ' is:\n')
+            outf.write('Output for temperature ' + np.str(temperature) + ' is:\n')
 
             for sentenceWord in ['buy', 'low', 'sell', 'high', 'is']:
                 input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ]).to(device)    # !!!!!!!!!!!!!!!!!!!!!!
@@ -201,7 +201,7 @@ def generate():
                 output, state = model(input, state)
 
                 # Sample a word id
-                prob = output.exp()
+                prob = output.squeeze().div(temperature).exp()
                 word_id = torch.multinomial(prob, num_samples=1).item()
 
                 # Fill input with sampled word id for the next time step
