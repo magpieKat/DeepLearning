@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import HW3
 from torch.nn.utils import clip_grad_norm_
 from data_utils import Dictionary, Corpus
 import matplotlib.pyplot as plt
@@ -55,17 +56,38 @@ if __name__ == '__main__':
     datapath='./data'
     seed=621
 
-    with open(model_name, 'rb') as f:
-        model = torch.load(f)
-    model.eval()
+    # Hyper-parameters
+    embed_size = 220
+    hidden_size = 220
+    num_layers = 2
+    num_epochs = 10
+    num_samples = 30  # number of words to be sampled
+    batch_size = 20
+    seq_length = 30
+    dropout = 0.3
+    learning_rate = 0.005
+    seed = 621
+    date = datetime.datetime.now().strftime("%d-%m-%y %H-%M-%S")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # Set the random seed manually for reproducibility.
+    corpus = Corpus()
+    ids = corpus.get_data('data/train.txt', batch_size)  # divide to batch size
+    valid_d = corpus.get_data('data/valid.txt', batch_size)
+    test_d = corpus.get_data('data/test.txt', batch_size)
+    vocab_size = len(corpus.dictionary)
+    num_batches = ids.size(1) // seq_length
+
+
+    model = HW3.RNNLM(vocab_size, embed_size, hidden_size, num_layers, dropout)
+    model.load_state_dict(torch.load(model_name,map_location=device))
+    model.eval()
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed(seed)
         model.cuda()
     else:
         model.cpu()
+        # Set the random seed manually for reproducibility.
 
     generate()
     print(' ****** END of generative process ******')
