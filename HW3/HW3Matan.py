@@ -226,6 +226,12 @@ if __name__ == '__main__':
     seq_length = 30
     dropout = 0.3
     learning_rate = 0.005
+    seed = 1111
+
+    # Set the random seed manually for reproducibility.
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
 
     # Load "Penn Treebank" dataset
     corpus = Corpus()
