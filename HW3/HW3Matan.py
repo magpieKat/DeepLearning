@@ -24,9 +24,8 @@ def new_dir(path, name):
 class RNNLM(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size, num_layers, dropout):
         super(RNNLM, self).__init__()
-        self.hidden_size = hidden_size
         self.embed = nn.Embedding(vocab_size, embed_size)
-        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout, bidirectional=True)
+        self.lstm = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
         self.linear = nn.Linear(4*hidden_size, vocab_size)
 
         # Tying weights as was suggested in:
@@ -38,8 +37,7 @@ class RNNLM(nn.Module):
         if embed_size != hidden_size:
             raise ValueError('Error! embed_size must equal hidden_size!\n')
         self.linear.weight = self.embed.weight
-        self.reset_parameters()
-        # self.init_weights()
+        self.init_weights()
 
     def forward(self, x, h):
         # Embed word ids to vectors
@@ -58,6 +56,7 @@ class RNNLM(nn.Module):
         std = 1.0 / math.sqrt(self.hidden_size)
         for w in self.parameters():
             w.data.uniform_(-std, std)
+
 
     def init_weights(self):
         initrange = 0.1
@@ -179,34 +178,36 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
 
 def generate():
     # Test the model
-    with torch.no_grad():
-        with open('sample.txt', 'w') as f:
-            # Set intial hidden ane cell states
-            state = (torch.zeros(num_layers, 1, hidden_size).to(device),
-                     torch.zeros(num_layers, 1, hidden_size).to(device))
+    torch.no_grad()
+    file_name = 'saveDir/'+date+'.txt'
+    with open(file_name, 'w') as outf:
+        # Set intial hidden ane cell states
+        state = (torch.zeros(num_layers, 1, hidden_size).to(device),
+                 torch.zeros(num_layers, 1, hidden_size).to(device))
 
-            # Select one word id randomly
-            prob = torch.ones(vocab_size)
-            input = torch.multinomial(prob, num_samples=1).unsqueeze(1).to(device)
+        for sentenceWord in ['buy', 'low', 'sell', 'high', 'is', 'the']:
+            input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ])    # !!!!!!!!!!!!!!!!!!!!!!
+            output, state = model(input, state)
+            outf.write(sentenceWord)
 
-            for i in range(num_samples):
-                # Forward propagate RNN
-                output, state = model(input, state)
+        for i in range(num_samples):
+            # Forward propagate RNN
+            output, state = model(input, state)
 
-                # Sample a word id
-                prob = output.exp()
-                word_id = torch.multinomial(prob, num_samples=1).item()
+            # Sample a word id
+            prob = output.exp()
+            word_id = torch.multinomial(prob, num_samples=1).item()
 
-                # Fill input with sampled word id for the next time step
-                input.fill_(word_id)
+            # Fill input with sampled word id for the next time step
+            input.fill_(word_id)
 
-                # File write
-                word = corpus.dictionary.idx2word[word_id]
-                word = '\n' if word == '<eos>' else word + ' '
-                f.write(word)
+            # File write
+            word = corpus.dictionary.idx2word[word_id]
+            word = '\n' if word == '<eos>' else word + ' '
+            outf.write(word)
 
-                if (i + 1) % 100 == 0:
-                    print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
+            if (i + 1) % 100 == 0:
+                print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
 
 
 if __name__ == '__main__':
@@ -217,8 +218,8 @@ if __name__ == '__main__':
     embed_size = 220
     hidden_size = 220
     num_layers = 2
-    num_epochs = 10
-    num_samples = 5  # number of words to be sampled
+    num_epochs = 40
+    num_samples = 30  # number of words to be sampled
     batch_size = 20
     seq_length = 30
     dropout = 0.3
