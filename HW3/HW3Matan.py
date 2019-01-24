@@ -156,7 +156,7 @@ def test(epoch, states):
         # save model if loss is smaller, else make learning rate smaller
         if not best_val_loss or test_loss < best_val_loss:
             torch.save(model.state_dict(), 'saveDir/'+'model.pkl')
-            print('Last saved model as a perplexity of ' + str(test_loss) + '\n')
+            print('Last saved model as a perplexity of ' + str(np.exp(test_loss[0])) + '\n')
             best_val_loss = test_loss
         else:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
@@ -194,7 +194,7 @@ def generate():
                 output, state = model(input, state)
 
             outf.write('buy low sell high is the ')
-            input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ])
+            input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ]).to(device)
 
             for i in range(num_samples):
                 # Forward propagate RNN
