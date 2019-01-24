@@ -181,35 +181,39 @@ def generate():
     torch.no_grad()
     file_name = 'saveDir/'+date+'.txt'
     with open(file_name, 'w') as outf:
-        # Set intial hidden ane cell states
-        state = (torch.zeros(num_layers, 1, hidden_size).to(device),
-                 torch.zeros(num_layers, 1, hidden_size).to(device))
+        for temperature in [1, 10, 100]:
+            # Set initial hidden and cell states
+            state = (torch.zeros(num_layers, 1, hidden_size).to(device),
+                     torch.zeros(num_layers, 1, hidden_size).to(device))
+            outf.write('Output for temperature - ' + np.str(temperature) + ' is:\n')
 
-        for sentenceWord in ['buy', 'low', 'sell', 'high', 'is']:
-            input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ])    # !!!!!!!!!!!!!!!!!!!!!!
-            output, state = model(input, state)
-            outf.write(sentenceWord)
+            for sentenceWord in ['buy', 'low', 'sell', 'high', 'is']:
+                input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ])    # !!!!!!!!!!!!!!!!!!!!!!
+                output, state = model(input, state)
+                outf.write(sentenceWord)
 
-        input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ])
+            input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ])
 
-        for i in range(num_samples):
-            # Forward propagate RNN
-            output, state = model(input, state)
+            for i in range(num_samples):
+                # Forward propagate RNN
+                output, state = model(input, state)
 
-            # Sample a word id
-            prob = output.exp()
-            word_id = torch.multinomial(prob, num_samples=1).item()
+                # Sample a word id
+                prob = output.exp()
+                word_id = torch.multinomial(prob, num_samples=1).item()
 
-            # Fill input with sampled word id for the next time step
-            input.fill_(word_id)
+                # Fill input with sampled word id for the next time step
+                input.fill_(word_id)
 
-            # File write
-            word = corpus.dictionary.idx2word[word_id]
-            word = '\n' if word == '<eos>' else word + ' '
-            outf.write(word)
+                # File write
+                word = corpus.dictionary.idx2word[word_id]
+                word = '\n' if word == '<eos>' else word + ' '
+                outf.write(word)
 
-            if (i + 1) % 100 == 0:
-                print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
+                if (i + 1) % 100 == 0:
+                    print('Sampled [{}/{}] words and save to {}'.format(i + 1, num_samples, 'sample.txt'))
+
+            outf.write('\n\n')
 
 
 if __name__ == '__main__':
@@ -226,7 +230,7 @@ if __name__ == '__main__':
     seq_length = 30
     dropout = 0.3
     learning_rate = 0.005
-    seed = 1111
+    seed = 621
 
     # Set the random seed manually for reproducibility.
     torch.manual_seed(seed)
