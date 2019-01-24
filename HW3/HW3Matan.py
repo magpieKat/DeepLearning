@@ -172,7 +172,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec1, color='blue', linewidth=2.5, linestyle='-', label=title1)
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
-    plt.yticks.(np.arange(70,250,step=15))
+    plt.yticks(np.arange(70,250,step=15))
     plt.legend(loc='upper right')
     new_dir(os.getcwd(), 'saveDir')
     plt.savefig('saveDir/'+date+st)
