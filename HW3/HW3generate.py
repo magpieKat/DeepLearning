@@ -15,7 +15,7 @@ def generate():
     torch.no_grad()
     file_name = 'saveDir/'+date+'WordCompletion.txt'
     with open(file_name, 'w') as outf:
-        for temperature in [1, 10, 100]:
+        for temperature in [1, 3, 20]:
             # Set initial hidden and cell states
             state = (torch.zeros(num_layers, 1, hidden_size).to(device),
                      torch.zeros(num_layers, 1, hidden_size).to(device))
