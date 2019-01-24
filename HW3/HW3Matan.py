@@ -155,7 +155,8 @@ def test(epoch, states):
 
         # save model if loss is smaller, else make learning rate smaller
         if not best_val_loss or test_loss < best_val_loss:
-            torch.save(model.state_dict(), 'model_Option4.pkl')
+            torch.save(model.state_dict(), 'saveDir/'+'model.pkl')
+            print('Last saved model as a perplexity of ' + str(test_loss) + '\n')
             best_val_loss = test_loss
         else:
             # Anneal the learning rate if no improvement has been seen in the validation dataset.
@@ -171,6 +172,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
     plt.plot(X, vec1, color='blue', linewidth=2.5, linestyle='-', label=title1)
     plt.plot(X, vec2, color='red', linewidth=2.5, linestyle='-', label=title2)
     plt.xticks(np.arange(1, num_epochs, step=1))
+    plt.yticks.(np.arange(70,250,step=15))
     plt.legend(loc='upper right')
     new_dir(os.getcwd(), 'saveDir')
     plt.savefig('saveDir/'+date+st)
@@ -179,7 +181,7 @@ def plot_graph(vec1, title1, vec2, title2, st, date):
 def generate():
     # Test the model
     torch.no_grad()
-    file_name = 'saveDir/'+date+'.txt'
+    file_name = 'saveDir/'+date+'WordCompletion.txt'
     with open(file_name, 'w') as outf:
         for temperature in [1, 10, 100]:
             # Set initial hidden and cell states
@@ -188,10 +190,10 @@ def generate():
             outf.write('Output for temperature - ' + np.str(temperature) + ' is:\n')
 
             for sentenceWord in ['buy', 'low', 'sell', 'high', 'is']:
-                input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ])    # !!!!!!!!!!!!!!!!!!!!!!
+                input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ]).to(device)    # !!!!!!!!!!!!!!!!!!!!!!
                 output, state = model(input, state)
-                outf.write(sentenceWord)
 
+            outf.write('buy low sell high is the ')
             input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ])
 
             for i in range(num_samples):
@@ -240,6 +242,8 @@ if __name__ == '__main__':
     # Load "Penn Treebank" dataset
     corpus = Corpus()
     ids = corpus.get_data('data/train.txt', batch_size)  # divide to batch size
+    print(type(ids))
+    print(ids[0:2])
     valid_d = corpus.get_data('data/valid.txt', batch_size)
     test_d = corpus.get_data('data/test.txt', batch_size)
     vocab_size = len(corpus.dictionary)
@@ -265,5 +269,5 @@ if __name__ == '__main__':
     plot_graph(train_lv, 'Train', test_lv, 'Test', 'Loss', date)
     plot_graph(np.exp(train_lv), 'Train', np.exp(test_lv), 'Test', 'Perplexity', date)
 
-    # generate()  # test the model
+    generate()  # test the model
     print('*****END*****')
