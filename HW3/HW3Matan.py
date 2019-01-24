@@ -185,10 +185,12 @@ def generate():
         state = (torch.zeros(num_layers, 1, hidden_size).to(device),
                  torch.zeros(num_layers, 1, hidden_size).to(device))
 
-        for sentenceWord in ['buy', 'low', 'sell', 'high', 'is', 'the']:
+        for sentenceWord in ['buy', 'low', 'sell', 'high', 'is']:
             input = torch.LongTensor([[corpus.dictionary.word2idx[sentenceWord]], ])    # !!!!!!!!!!!!!!!!!!!!!!
             output, state = model(input, state)
             outf.write(sentenceWord)
+
+        input = torch.LongTensor([[corpus.dictionary.word2idx['the']], ])
 
         for i in range(num_samples):
             # Forward propagate RNN
@@ -218,7 +220,7 @@ if __name__ == '__main__':
     embed_size = 220
     hidden_size = 220
     num_layers = 2
-    num_epochs = 40
+    num_epochs = 10
     num_samples = 30  # number of words to be sampled
     batch_size = 20
     seq_length = 30
